@@ -9,6 +9,12 @@ import playButton from './img/playButton.png';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
+// No projeto tem o método isLogado() que eu estava usando para verificar se o token está no localStorage
+// assim iria manter o login do usuário mesmo com a página atualizada.
+
+// Porém por algum motivo, nesse método eu não estava conseguindo acessar nada, nem os states, nem nada. Só dava erro
+// então não implementei essa função.
+
 class App extends React.Component {
 
     constructor(props) {
@@ -64,6 +70,28 @@ class App extends React.Component {
 
     }
 
+    
+    logar(){
+
+        document.getElementById("user").value = "";
+        document.getElementById("pass").value = "";
+
+        document.getElementById("btnCadastro").style.display = "none";
+
+        document.getElementById("doisBr").style.display = "none";
+
+        document.getElementById("right").style.display = "inline-block";
+    }
+
+    isLogado(){
+
+        let token = "QpwL5tke4Pnpja7X4"
+
+        if(localStorage.getItem("token") === token){
+            this.logar();
+        }
+    }
+
     loginRequest() {
         this.setState({
             displayErro: "inline-block"
@@ -90,20 +118,7 @@ class App extends React.Component {
                 console.log("Logado!");
                 this.setLocalStorage(response.data.token);
 
-                //compClima.climaRequest();
-
-                document.getElementById("user").disabled = true;
-                document.getElementById("pass").disabled = true;
-
-                document.getElementById("user").value = "";
-                document.getElementById("pass").value = "";
-
-                document.getElementById("btnLogin").disabled = true;
-                document.getElementById("btnCadastro").style.display = "none";
-
-                document.getElementById("doisBr").style.display = "none";
-
-                document.getElementById("right").style.display = "inline-block";
+                this.logar();
 
             }
 
@@ -160,7 +175,7 @@ class App extends React.Component {
         localStorage.setItem("token", token);
     };
 
-    jogoRequest(){
+    jogoRequest() {
 
         const axios = require('axios');
 
@@ -180,7 +195,7 @@ class App extends React.Component {
             }));
     };
 
-    pesquisarChar(){
+    pesquisarChar() {
         document.getElementById("dadosUser").style.display = "inline-block";
 
         this.jogoRequest();
@@ -219,38 +234,59 @@ class App extends React.Component {
                                     <a href="/#">Partners</a>
                                 </li>
 
-                                <Popup trigger={<button id="btnEntrar">Entrar</button>} modal position="right center">
-                                    <div id="loginBox">
-
-                                        <span>Email</span><br />
-                                        <input id="user" /><br /><br />
-
-                                        <span>Senha</span><br />
-                                        <input id="pass" type="password" /><br /><br />
-
-                                        <button id="btnCadastro" onClick={this.cadastroRequest.bind(this)}>Cadastrar</button>
-                                        <span id="doisBr"><br /><br /></span>
-                                        <button id="btnLogin" onClick={this.loginRequest.bind(this)}>Entrar</button>
-                                        <div id="msgErro"><p style={{
-                                            display: this.state.displayErro,
-                                            textAlign: "center",
-                                            border: "1px solid black",
-                                            borderRadius: 7 + "px",
-                                            paddingRight: 25 + "px",
-                                            paddingLeft: 25 + "px",
-                                            paddingTop: 5 + "px",
-                                            paddingBottom: 5 + "px",
-                                            backgroundColor: this.state.color,
-                                            color: "white"
-                                        }
-                                        }>{this.state.msgErro}</p></div>
-
-                                    </div>
-                                </Popup>
                             </ul>
                         </nav>
 
+                        <br /><br /><br />
+
+
                     </div>
+
+                    <div style={{ textAlign: "center" }}>
+                        <Popup trigger={<button id="btnEntrar"><strong>Entrar</strong></button>} modal position="right center">
+                            <div id="loginBox">
+
+                                <span>Email</span><br />
+                                <input id="user" type="email" disabled={this.state.logado} /><br /><br />
+
+                                <span>Senha</span><br />
+
+                                <input id="pass" type="password" disabled={this.state.logado} /><br /><br />
+
+                                <button id="btnCadastro"
+                                    disabled={this.state.logado}
+                                    onClick={this.cadastroRequest.bind(this)}><strong>Cadastrar</strong>
+                                        </button>
+
+                                <span id="doisBr"><br /><br /></span>
+
+                                <button id="btnLogin"
+                                    disabled={this.state.logado}
+                                    onClick={this.loginRequest.bind(this)}><strong>Entrar</strong>
+                                        </button>
+
+                                <div id="msgErro"><p style={{
+                                    display: this.state.displayErro,
+                                    textAlign: "center",
+                                    border: "1px solid black",
+                                    borderRadius: 7 + "px",
+                                    paddingRight: 25 + "px",
+                                    paddingLeft: 25 + "px",
+                                    paddingTop: 5 + "px",
+                                    paddingBottom: 5 + "px",
+                                    backgroundColor: this.state.color,
+                                    color: "white"
+                                }
+                                }>{this.state.msgErro}</p></div>
+
+                                <p>Dados para teste</p>
+                                <p>Email: eve.holt@reqres.in</p>
+                                <p>Senha: cityslicka</p>
+
+                            </div>
+                        </Popup>
+                    </div> <br/>
+
 
                     <div id="hiddenMenu">
                         <img id="menuIcon" style={{ width: 40 + 'px' }} src={menu} alt="menunIcon" />
@@ -286,38 +322,9 @@ class App extends React.Component {
 
                             <hr />
 
-                            <li>
-                            <Popup trigger={<button id="btnEntrar">Entrar</button>} modal position="right center">
-                                    <div id="loginBox">
-
-                                        <span>Email</span><br />
-                                        <input id="user" /><br /><br />
-
-                                        <span>Senha</span><br />
-                                        <input id="pass" type="password" /><br /><br />
-
-                                        <button id="btnCadastro" onClick={this.cadastroRequest.bind(this)}>Cadastrar</button>
-                                        <span id="doisBr"><br /><br /></span>
-                                        <button id="btnLogin" onClick={this.loginRequest.bind(this)}>Entrar</button>
-                                        <div id="msgErro"><p style={{
-                                            display: this.state.displayErro,
-                                            textAlign: "center",
-                                            border: "1px solid black",
-                                            borderRadius: 7 + "px",
-                                            paddingRight: 25 + "px",
-                                            paddingLeft: 25 + "px",
-                                            paddingTop: 5 + "px",
-                                            paddingBottom: 5 + "px",
-                                            backgroundColor: this.state.color,
-                                            color: "white"
-                                        }
-                                        }>{this.state.msgErro}</p></div>
-
-                                    </div>
-                                </Popup>
-                            </li>
                         </ul>
                     </div>
+
                 </header>
 
                 <div id="banner">
@@ -333,6 +340,8 @@ class App extends React.Component {
                 <div id="corpo">
 
                     <div id="left">
+
+                        <button onClick={this.isLogado} style={{display: "none"}}>teste</button>
 
                         <div id="bigBox">
 
@@ -363,11 +372,12 @@ class App extends React.Component {
                     <div id="right">
                         <div>
                             <span><strong>ID: </strong></span>
-                            <input id="inputId"/>
-                            <button id="btnPesquisar" onClick={this.pesquisarChar.bind(this)}>Pesquisar</button><br/><br/>
+                            <input id="inputId" />
+                            <button id="btnPesquisar" onClick={this.pesquisarChar.bind(this)}>Pesquisar</button><br />
+                            <p style={{textAlign: "center"}}>ID para exemplo: 31614784</p>
                             <div id="dadosUser">
-                                <div><strong>Usuário: </strong>{this.state.user}</div><br/>
-                                <div><img id="fotoChar" src={this.state.foto} alt="foto do char"/></div>
+                                <div><strong>Usuário: </strong>{this.state.user}</div><br />
+                                <div><img id="fotoChar" src={this.state.foto} alt="foto do char" /></div>
                             </div>
 
                         </div>
