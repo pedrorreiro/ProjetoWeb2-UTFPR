@@ -3,6 +3,7 @@ import './App.css';
 import './style.css';
 import logo1 from './img/logo.svg';
 import logo2 from './img/logo2.svg';
+import loadGif from './img/loading.gif';
 import menu from './img/menu.png';
 import iconBanner from './img/iconBanner.png';
 import playButton from './img/playButton.png';
@@ -22,73 +23,64 @@ class App extends React.Component {
 
         this.state = {
             id: "",
-            user: "",
+            email: "",
+            campoEmail: "",
+            campoSenha: "",
+            campoId: "",
             foto: "",
             msgErro: "",
             color: "",
             logado: false,
-            displayErro: "none"
+            displayErro: "none",
+            msgLoad: "none",
+            dadosUser: "none",
+            right: "none",
+            btnCadastro: "inline-block",
+            doisBr: "inline-block",
+            btnSair: "none",
+            btnLogar: "inline-block"
         }
     }
 
-    coordRequest() {
-
-        const axios = require('axios');
-
-        axios.get('http://ip-api.com/json/' + this.state.meuIp)
-            .then(((response) => {
-
-                this.setState({
-                    latitude: response.data.lat,
-                    longitude: response.data.lon
-                });
-
-
-                console.log("Latitude: " + this.state.latitude);
-                console.log("Longitude: " + this.state.longitude);
-            }));
-
-
-        //this.climaRequest();
-    }
-
-    myIpRequest() {
-
-        const axios = require('axios');
-
-        axios.get('https://api.ipify.org')
-            .then(((response) => {
-
-                var resposta = response.data;
-
-                this.setState({
-                    meuIp: resposta
-                });
-            }));
-
-        this.coordRequest();
-
-    }
-
-    
     logar(){
 
-        document.getElementById("user").value = "";
-        document.getElementById("pass").value = "";
+        this.setState({
+            email: "",
+            senha: "",
+            btnCadastro: "none",
+            doisBr: "none",
+            right: "inline-block",
+            logado: true,
+            btnSair: "inline-block",
+            btnLogar: "none"
+        })
 
-        document.getElementById("btnCadastro").style.display = "none";
-
-        document.getElementById("doisBr").style.display = "none";
-
-        document.getElementById("right").style.display = "inline-block";
     }
 
-    isLogado(){
+    sair(){
+
+        localStorage.removeItem("token");
+
+        this.setState({
+            logado: false,
+            right: "none",
+            btnSair: "none",
+            btnLogar: "inline-block"
+        })
+
+    }
+
+    isLogado = () =>{
 
         let token = "QpwL5tke4Pnpja7X4"
 
         if(localStorage.getItem("token") === token){
             this.logar();
+            console.log("Logado automaticamente!")
+        }
+
+        else{
+            console.log("Não foi logado automaticamente!")
         }
     }
 
@@ -99,38 +91,49 @@ class App extends React.Component {
 
         const axios = require('axios');
 
-        let user = document.getElementById("user").value;
-        let pass = document.getElementById("pass").value;
+        let email = this.state.campoEmail;
+        let senha = this.state.campoSenha;
 
-        axios.post('https://reqres.in/api/login', {
-            email: user,
-            password: pass
-        }).then(((response) => {
-
-            if (response.status === 200) {
-                this.setState({
-                    msgErro: "Login com sucesso!",
-                    color: "green",
-                    logado: true
-                });
-
-                console.log(response.status);
-                console.log("Logado!");
-                this.setLocalStorage(response.data.token);
-
-                this.logar();
-
-            }
-
-        })).catch((error) => {
-            console.log(error);
-            console.log("Erro no login");
-
+        if(email === "" || senha === ""){
             this.setState({
-                msgErro: "Erro no login!",
+                msgErro: "Campos vazios!",
                 color: "red"
+            })
+        }
+
+        else{
+
+            axios.post('https://reqres.in/api/login', {
+                email: email,
+                password: senha
+            }).then(((response) => {
+
+                if (response.status === 200) {
+                    this.setState({
+                        msgErro: "Login com sucesso!",
+                        color: "green",
+                        logado: true
+                    });
+
+                    console.log(response.status);
+                    console.log("Logado!");
+                    this.setLocalStorage(response.data.token);
+
+                    this.logar();
+
+                }
+
+            })).catch((error) => {
+                console.log(error);
+                console.log("Erro no login");
+
+                this.setState({
+                    msgErro: "Erro no login!",
+                    color: "red"
+                });
             });
-        });
+
+        }
 
     }
 
@@ -142,32 +145,50 @@ class App extends React.Component {
 
         const axios = require('axios');
 
-        let user = document.getElementById("user").value;
-        let pass = document.getElementById("pass").value;
+        let email = this.state.campoEmail;
+        let senha = this.state.campoSenha;
 
-        axios.post('https://reqres.in/api/register', {
-            email: user,
-            password: pass
-        }).then(((response) => {
-
-            if (response.status === 200) {
-                this.setState({
-                    msgErro: "Cadastro com sucesso!",
-                    color: "green",
-                });
-
-                console.log(response.status);
-                console.log("Sucesso no cadastro!");
-            }
-
-        })).catch((error) => {
-            console.log("Erro no cadastro");
-
+        if(email === "" || senha === ""){
             this.setState({
-                msgErro: "Erro no cadastro!",
+                msgErro: "Campos vazios!",
                 color: "red"
+            })
+        }
+
+        else if(email.length < 3 || senha.length < 3){
+            this.setState({
+                msgErro: "Os campos devem ter no mínimo 3 caracteres",
+                color: "red"
+            })
+        }
+
+        else{
+
+            axios.post('https://reqres.in/api/register', {
+                email: email,
+                password: senha
+            }).then(((response) => {
+
+                if (response.status === 200) {
+                    this.setState({
+                        msgErro: "Cadastro com sucesso!",
+                        color: "green",
+                    });
+
+                    console.log(response.status);
+                    console.log("Sucesso no cadastro!");
+                }
+
+            })).catch((error) => {
+                console.log("Erro no cadastro");
+
+                this.setState({
+                    msgErro: "Erro no cadastro!",
+                    color: "red"
+                });
             });
-        });
+
+        }
 
     }
 
@@ -177,9 +198,14 @@ class App extends React.Component {
 
     jogoRequest() {
 
+        this.setState({
+            msgLoad: "inline-block",
+            dadosUser: "none"
+        });
+
         const axios = require('axios');
 
-        var id = document.getElementById("inputId").value;
+        var id = this.state.campoId;
 
         axios.get('https://xivapi.com/character/' + id)
             .then(((response) => {
@@ -192,18 +218,41 @@ class App extends React.Component {
                     foto: fotinha
                 })
 
+                this.setState({
+                    msgLoad: "none",
+                    dadosUser: "inline-block"
+                });
+     
+
             }));
     };
 
+    changeEmail = (event) =>{
+        this.setState({
+            campoEmail: event.target.value
+        })
+    }
+
+    changeSenha = (event) =>{
+        this.setState({
+            campoSenha: event.target.value
+        })
+    }
+
+    changeId = (event) =>{
+        this.setState({
+            campoId: event.target.value
+        })
+    }
+
     pesquisarChar() {
-        document.getElementById("dadosUser").style.display = "inline-block";
 
         this.jogoRequest();
     }
 
     render() {
         return (
-            <div className="wrapper" resize={this.resize}>
+            <div className="wrapper" resize={this.resize} onLoad={this.isLogado}>
                 <header>
                     <div id="contentHeader">
                         <div className="imgsLogo">
@@ -242,51 +291,70 @@ class App extends React.Component {
 
                     </div>
 
-                    <div style={{ textAlign: "center" }}>
-                        <Popup trigger={<button id="btnEntrar"><strong>Entrar</strong></button>} modal position="right center">
-                            <div id="loginBox">
+                    <div id="botoes2" style={{textAlign: "center"}}>
+                        <div style={{ textAlign: "center", display: this.state.btnLogar }}>
+                            <Popup trigger={<button id="btnEntrar"><strong>Entrar</strong></button>} modal position="right center">
+                                <div id="loginBox">
 
-                                <span>Email</span><br />
-                                <input id="user" type="email" disabled={this.state.logado} /><br /><br />
+                                    <span>Email</span><br />
+                                    <input id="user" type="email" disabled={this.state.logado} onChange={this.changeEmail}
+                                    style={{width: "75%"}}/><br /><br />
 
-                                <span>Senha</span><br />
+                                    <span>Senha</span><br />
 
-                                <input id="pass" type="password" disabled={this.state.logado} /><br /><br />
+                                    <input id="senha" type="password" disabled={this.state.logado} onChange={this.changeSenha} 
+                                    style={{width: "75%"}}
+                                    /><br /><br />
 
-                                <button id="btnCadastro"
-                                    disabled={this.state.logado}
-                                    onClick={this.cadastroRequest.bind(this)}><strong>Cadastrar</strong>
-                                        </button>
+                                    <button id="btnCadastro"
+                                        disabled={this.state.logado}
+                                        onClick={this.cadastroRequest.bind(this)}
+                                        style= {{display: this.state.btnCadastro, width: "75%", marginBottom: "10px"}}
+                                        ><strong>Cadastrar</strong>
+                                            </button>
 
-                                <span id="doisBr"><br /><br /></span>
+                                    <span id="doisBr" style={{display: this.state.doisBr}}><br /><br /></span>
 
-                                <button id="btnLogin"
-                                    disabled={this.state.logado}
-                                    onClick={this.loginRequest.bind(this)}><strong>Entrar</strong>
-                                        </button>
+                                    <button id="btnLogin"
+                                        disabled={this.state.logado}
+                                        onClick={this.loginRequest.bind(this)}
+                                        style={{width: "75%"}}><strong>Entrar</strong>
+                                            </button>
 
-                                <div id="msgErro"><p style={{
-                                    display: this.state.displayErro,
-                                    textAlign: "center",
-                                    border: "1px solid black",
-                                    borderRadius: 7 + "px",
-                                    paddingRight: 25 + "px",
-                                    paddingLeft: 25 + "px",
-                                    paddingTop: 5 + "px",
-                                    paddingBottom: 5 + "px",
-                                    backgroundColor: this.state.color,
-                                    color: "white"
-                                }
-                                }>{this.state.msgErro}</p></div>
+                                    <div id="msgErro"><p style={{
+                                        display: this.state.displayErro,
+                                        textAlign: "center",
+                                        border: "1px solid black",
+                                        borderRadius: 7 + "px",
+                                        paddingRight: 25 + "px",
+                                        paddingLeft: 25 + "px",
+                                        paddingTop: 5 + "px",
+                                        paddingBottom: 5 + "px",
+                                        backgroundColor: this.state.color,
+                                        color: "white"
+                                    }
+                                    }>{this.state.msgErro}</p></div>
 
-                                <p>Dados para teste</p>
-                                <p>Email: eve.holt@reqres.in</p>
-                                <p>Senha: cityslicka</p>
+                                    <p>Dados para teste</p>
+                                    <p>Email: eve.holt@reqres.in</p>
+                                    <p>Senha: cityslicka</p>
 
-                            </div>
-                        </Popup>
-                    </div> <br/>
+                                </div>
+                            </Popup>
 
+                        </div> 
+
+                        <br/>
+
+                        <div style={{textAlign: "center"}}>
+                            <button id="btnEntrar"
+                                        style={{display: this.state.btnSair, marginLeft: "10px"}}
+                                        onClick={this.sair.bind(this)}
+                                        ><strong>Sair</strong>
+                                            </button>
+                        </div>
+
+                    </div>
 
                     <div id="hiddenMenu">
                         <img id="menuIcon" style={{ width: 40 + 'px' }} src={menu} alt="menunIcon" />
@@ -341,8 +409,6 @@ class App extends React.Component {
 
                     <div id="left">
 
-                        <button onClick={this.isLogado} style={{display: "none"}}>teste</button>
-
                         <div id="bigBox">
 
                             <div id="content">
@@ -369,15 +435,19 @@ class App extends React.Component {
                         </div>
                     </div>
 
-                    <div id="right">
+                    <div id="right" style={{display: this.state.right}}>
                         <div>
                             <span><strong>ID: </strong></span>
-                            <input id="inputId" />
+                            <input id="inputId" onChange={this.changeId}/>
                             <button id="btnPesquisar" onClick={this.pesquisarChar.bind(this)}>Pesquisar</button><br />
                             <p style={{textAlign: "center"}}>ID para exemplo: 31614784</p>
-                            <div id="dadosUser">
-                                <div><strong>Usuário: </strong>{this.state.user}</div><br />
-                                <div><img id="fotoChar" src={this.state.foto} alt="foto do char" /></div>
+                            <div id="msgLoad" style={{display: this.state.msgLoad}}>
+                                <p><strong>Carregando...</strong></p>
+                                <img src={loadGif} alt="loading"/>
+                                </div>
+                            <div id="dadosUser" style={{display: this.state.dadosUser}}>
+                                    <div><strong>Usuário: </strong>{this.state.user}</div><br />
+                                    <div><img id="fotoChar" src={this.state.foto} alt="foto do char" /></div>
                             </div>
 
                         </div>
