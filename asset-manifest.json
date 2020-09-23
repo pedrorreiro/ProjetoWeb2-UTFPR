@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/pedrorreiro/projetoWeb2.git/static/css/main.d81459d1.chunk.css",
+    "main.js": "/pedrorreiro/projetoWeb2.git/static/js/main.d34ab614.chunk.js",
+    "main.js.map": "/pedrorreiro/projetoWeb2.git/static/js/main.d34ab614.chunk.js.map",
+    "runtime-main.js": "/pedrorreiro/projetoWeb2.git/static/js/runtime-main.2da81777.js",
+    "runtime-main.js.map": "/pedrorreiro/projetoWeb2.git/static/js/runtime-main.2da81777.js.map",
+    "static/css/2.f1b50ea8.chunk.css": "/pedrorreiro/projetoWeb2.git/static/css/2.f1b50ea8.chunk.css",
+    "static/js/2.8ce98868.chunk.js": "/pedrorreiro/projetoWeb2.git/static/js/2.8ce98868.chunk.js",
+    "static/js/2.8ce98868.chunk.js.map": "/pedrorreiro/projetoWeb2.git/static/js/2.8ce98868.chunk.js.map",
+    "index.html": "/pedrorreiro/projetoWeb2.git/index.html",
+    "precache-manifest.e58373fd52b2f830c4d72d160dbf71ea.js": "/pedrorreiro/projetoWeb2.git/precache-manifest.e58373fd52b2f830c4d72d160dbf71ea.js",
+    "service-worker.js": "/pedrorreiro/projetoWeb2.git/service-worker.js",
+    "static/css/2.f1b50ea8.chunk.css.map": "/pedrorreiro/projetoWeb2.git/static/css/2.f1b50ea8.chunk.css.map",
+    "static/css/main.d81459d1.chunk.css.map": "/pedrorreiro/projetoWeb2.git/static/css/main.d81459d1.chunk.css.map",
+    "static/js/2.8ce98868.chunk.js.LICENSE.txt": "/pedrorreiro/projetoWeb2.git/static/js/2.8ce98868.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/pedrorreiro/projetoWeb2.git/static/media/logo.d5228773.svg",
+    "static/media/logo2.svg": "/pedrorreiro/projetoWeb2.git/static/media/logo2.5a8b5c70.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.2da81777.js",
+    "static/css/2.f1b50ea8.chunk.css",
+    "static/js/2.8ce98868.chunk.js",
+    "static/css/main.d81459d1.chunk.css",
+    "static/js/main.d34ab614.chunk.js"
+  ]
+}
