@@ -10,12 +10,6 @@ import playButton from './img/playButton.png';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
-// No projeto tem o método isLogado() que eu estava usando para verificar se o token está no localStorage
-// assim iria manter o login do usuário mesmo com a página atualizada.
-
-// Porém por algum motivo, nesse método eu não estava conseguindo acessar nada, nem os states, nem nada. Só dava erro
-// então não implementei essa função.
-
 class App extends React.Component {
 
     constructor(props) {
